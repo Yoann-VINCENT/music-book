@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -38,6 +40,22 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $pseudo;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Book::class, mappedBy="author")
+     */
+    private $books;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Book::class, inversedBy="fav_users")
+     */
+    private $favs;
+
+    public function __construct()
+    {
+        $this->books = new ArrayCollection();
+        $this->favs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -125,6 +143,60 @@ class User implements UserInterface
     public function setPseudo(string $pseudo): self
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Book[]
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBooks(Book $books): self
+    {
+        if (!$this->books->contains($books)) {
+            $this->books[] = $books;
+            $books->setBooks($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooks(Book $books): self
+    {
+        if ($this->books->removeElement($books)) {
+            // set the owning side to null (unless already changed)
+            if ($books->getBooks() === $this) {
+                $books->setBooks(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Book[]
+     */
+    public function getFavs(): Collection
+    {
+        return $this->favs;
+    }
+
+    public function addFav(Book $fav): self
+    {
+        if (!$this->favs->contains($fav)) {
+            $this->favs[] = $fav;
+        }
+
+        return $this;
+    }
+
+    public function removeFav(Book $fav): self
+    {
+        $this->favs->removeElement($fav);
 
         return $this;
     }
