@@ -27,8 +27,8 @@
                 <td>{{ page.lyrics }}</td>
                 <td>{{ page.pageNumber }}</td>
                 <td>
-                    <a href="{{ path('page_show', {'id': page.id}) }}">show</a>
-                    <a href="{{ path('page_edit', {'id': page.id}) }}">edit</a>
+                    <a href="{{ path('page_show', {'slug': page.slug}) }}">show</a>
+                    <a href="{{ path('page_edit', {'slug': page.slug}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

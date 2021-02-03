@@ -3,12 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\BookRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
+ * @Vich\Uploadable
  */
 class Book
 {
@@ -30,12 +35,31 @@ class Book
     private $cover;
 
     /**
+     * @Vich\UploadableField(mapping="cover_file", fileNameProperty="cover")
+     * @var File
+     * @Assert\Image(
+     *     uploadErrorMessage="Une erreur est survenue lors du téléchargement.",
+     *     maxSize="2097152",
+     *     maxSizeMessage="Votre image est trop grande. Veuillez selectionner une image de moins de 2Mo.",
+     *     detectCorrupted=true,
+     *     sizeNotDetectedMessage= true,
+     *     mimeTypes = {
+     *          "image/png",
+     *          "image/jpeg",
+     *          "image/jpg",
+     *      },
+     *     mimeTypesMessage="Seuls les formats png, jpeg, jpg sont acceptés."
+     * )
+     */
+    private $coverFile;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="author")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="books")
      */
     private $author;
 
@@ -59,11 +83,22 @@ class Book
      */
     private $pages;
 
+    /**
+     * @ORM\Column(type="datetime")
+     * @var DateTime
+     */
+    private $updatedAt;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
         $this->fav_users = new ArrayCollection();
         $this->pages = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->title;
     }
 
     public function getId(): ?int
@@ -93,6 +128,20 @@ class Book
         $this->cover = $cover;
 
         return $this;
+    }
+
+    public function setCoverFile(File $image = null): Book
+    {
+        $this->coverFile = $image;
+        if ($image) {
+            $this->updatedAt = new DateTime('now');
+        }
+        return $this;
+    }
+
+    public function getCoverFile(): ?File
+    {
+        return $this->coverFile;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
@@ -210,5 +259,13 @@ class Book
         }
 
         return $this;
+    }
+
+    /**
+     * @param DateTime $updatedAt
+     */
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

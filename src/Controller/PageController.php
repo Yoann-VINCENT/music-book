@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Page;
 use App\Form\PageType;
 use App\Repository\PageRepository;
+use App\Service\Slugify;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,14 +28,19 @@ class PageController extends AbstractController
 
     /**
      * @Route("/new", name="page_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param Slugify $slugify
+     * @return Response
      */
-    public function new(Request $request): Response
+    public function new(Request $request, Slugify $slugify): Response
     {
         $page = new Page();
         $form = $this->createForm(PageType::class, $page);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $slug = $slugify->generate($page->getTitle());
+            $page->setSlug($slug);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($page);
             $entityManager->flush();
@@ -49,7 +55,7 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="page_show", methods={"GET"})
+     * @Route("/{slug}", name="page_show", methods={"GET"})
      */
     public function show(Page $page): Response
     {
@@ -59,7 +65,7 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="page_edit", methods={"GET","POST"})
+     * @Route("/{slug}/edit", name="page_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Page $page): Response
     {

@@ -94,7 +94,8 @@ class PageFixtures extends Fixture implements DependentFixtureInterface
                 ->setLyrics($data['lyrics'])
                 ->setPageNumber($data['page_number'])
                 ->setBook($this->getReference($data['book']))
-                ->setSlug($this->slugify->generate($title));
+                ->setSlug($this->slugify->generate($title))
+                ->setUpdatedAt(new \DateTime('now'));
             $manager->persist($page);
         }
         $manager->flush();

@@ -3,9 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Book;
+use App\Entity\Category;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class BookType extends AbstractType
 {
@@ -13,12 +16,21 @@ class BookType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('cover')
+            ->add('coverFile', VichFileType::class, [
+                'required'      => false,
+                'allow_delete'  => true,
+                'download_uri' => true,
+            ])
             ->add('created_at')
             ->add('slug')
             ->add('author')
-            ->add('category')
-            ->add('fav_users')
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'expanded'  => true,
+                'by_reference' => false
+            ])
         ;
     }
 

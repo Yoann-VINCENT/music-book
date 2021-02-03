@@ -3,10 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\PageRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=PageRepository::class)
+ * @Vich\Uploadable
  */
 class Page
 {
@@ -28,9 +33,34 @@ class Page
     private $image;
 
     /**
+     * @Vich\UploadableField(mapping="image_file", fileNameProperty="image")
+     * @var File
+     * @Assert\Image(
+     *     uploadErrorMessage="Une erreur est survenue lors du téléchargement.",
+     *     maxSize="2097152",
+     *     maxSizeMessage="Votre image est trop grande. Veuillez selectionner une image de moins de 2Mo.",
+     *     detectCorrupted=true,
+     *     sizeNotDetectedMessage= true,
+     *     mimeTypes = {
+     *          "image/png",
+     *          "image/jpeg",
+     *          "image/jpg",
+     *      },
+     *     mimeTypesMessage="Seuls les formats png, jpeg, jpg sont acceptés."
+     * )
+     */
+    private $imageFile;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $song;
+
+    /**
+     * @Vich\UploadableField(mapping="song_file", fileNameProperty="song")
+     * @var File
+     */
+    private $songFile;
 
     /**
      * @ORM\Column(type="text")
@@ -51,6 +81,17 @@ class Page
      * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="pages")
      */
     private $book;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @var DateTime
+     */
+    private $updatedAt;
+
+    public function __toString()
+    {
+        return $this->title;
+    }
 
     public function getId(): ?int
     {
@@ -81,6 +122,20 @@ class Page
         return $this;
     }
 
+    public function setImageFile(File $image = null): Page
+    {
+        $this->imageFile = $image;
+        if ($image) {
+            $this->updatedAt = new DateTime('now');
+        }
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
     public function getSong(): ?string
     {
         return $this->song;
@@ -91,6 +146,20 @@ class Page
         $this->song = $song;
 
         return $this;
+    }
+
+    public function setSongFile(File $song = null): Page
+    {
+        $this->songFile = $song;
+        if ($song) {
+            $this->updatedAt = new DateTime('now');
+        }
+        return $this;
+    }
+
+    public function getSongFile(): ?File
+    {
+        return $this->songFile;
     }
 
     public function getLyrics(): ?string
@@ -139,5 +208,13 @@ class Page
         $this->book = $book;
 
         return $this;
+    }
+
+    /**
+     * @param DateTime $updatedAt
+     */
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

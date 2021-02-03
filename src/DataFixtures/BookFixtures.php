@@ -50,7 +50,8 @@ class BookFixtures extends Fixture implements DependentFixtureInterface
                 ->addCategory($this->getReference('category_3'))
                 ->setSlug($this->slugify->generate($title))
                 ->setAuthor($this->getReference('Bireux'))
-                ->setCreatedAt(new \DateTime('now'));
+                ->setCreatedAt(new \DateTime('now'))
+                ->setUpdatedAt(new \DateTime('now'));
             $manager->persist($book);
             $this->addReference('book_'.$i, $book);
             $i++;
