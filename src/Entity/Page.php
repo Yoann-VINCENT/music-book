@@ -42,6 +42,16 @@ class Page
      */
     private $page_number;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="pages")
+     */
+    private $book;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +113,30 @@ class Page
     public function setPageNumber(int $page_number): self
     {
         $this->page_number = $page_number;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): self
+    {
+        $this->book = $book;
 
         return $this;
     }

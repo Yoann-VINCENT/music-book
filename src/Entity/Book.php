@@ -54,10 +54,16 @@ class Book
      */
     private $slug;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Page::class, mappedBy="book")
+     */
+    private $pages;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
         $this->fav_users = new ArrayCollection();
+        $this->pages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -172,6 +178,36 @@ class Book
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Page[]
+     */
+    public function getPages(): Collection
+    {
+        return $this->pages;
+    }
+
+    public function addPage(Page $page): self
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages[] = $page;
+            $page->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removePage(Page $page): self
+    {
+        if ($this->pages->removeElement($page)) {
+            // set the owning side to null (unless already changed)
+            if ($page->getBook() === $this) {
+                $page->setBook(null);
+            }
+        }
 
         return $this;
     }
