@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Book{% endblock %}
+{% block title %}{{ book.title }}{% endblock %}
 
 {% block body %}
     <h1>{{ book.title }} <span class="book-author">by {{ book.author.pseudo }}</span></h1>
@@ -12,7 +12,7 @@
         <h2>Read</h2>
         <p>Pages :
             {% for page in book.pages %}
-            <a class="btn-lg btn-info" href="{{ path('book_index') }}">{{ page.pageNumber }}</a>
+            <a class="btn-lg btn-info" href="{{ path('page_show', {'slug': book.slug, 'page_slug': page.slug}) }}">{{ page.pageNumber }}</a>
                 {% if page.pageNumber < book.pages|length %}
                 <span> | </span>
                 {% endif %}

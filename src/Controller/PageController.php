@@ -7,6 +7,7 @@ use App\Entity\Page;
 use App\Form\PageType;
 use App\Repository\PageRepository;
 use App\Service\Slugify;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,7 +54,22 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="page_edit", methods={"GET","POST"})
+     * @Route("/{page_slug}", name="page_show", methods={"GET"})
+     * @ParamConverter("page", class="App\Entity\Page", options={"mapping": {"page_slug": "slug"}})
+     * @param Book $book
+     * @param Page $page
+     * @return Response
+     */
+    public function show(Book $book, Page $page): Response
+    {
+        return $this->render('book/pageShow.html.twig', [
+            'book' => $book,
+            'page' => $page,
+        ]);
+    }
+
+    /**
+     * @Route("/{page_slug}/edit", name="page_edit", methods={"GET","POST"})
      * @param Book $book
      * @param Request $request
      * @param Page $page
