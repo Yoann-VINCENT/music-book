@@ -70,6 +70,7 @@ class PageController extends AbstractController
 
     /**
      * @Route("/{page_slug}/edit", name="page_edit", methods={"GET","POST"})
+     * @ParamConverter("page", class="App\Entity\Page", options={"mapping": {"page_slug": "slug"}})
      * @param Book $book
      * @param Request $request
      * @param Page $page

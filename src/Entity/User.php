@@ -185,7 +185,7 @@ class User implements UserInterface
     /**
      * @return Collection|Book[]
      */
-    public function getFavs(): Collection
+    public function getFav(): Collection
     {
         return $this->favs;
     }
@@ -204,5 +204,18 @@ class User implements UserInterface
         $this->favs->removeElement($fav);
 
         return $this;
+    }
+
+    /**
+     * @param Book $book
+     * @return bool
+     */
+    public function isInFav(Book $book): bool
+    {
+        if ($this->favs->contains($book)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

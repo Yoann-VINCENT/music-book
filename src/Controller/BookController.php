@@ -6,6 +6,7 @@ use App\Entity\Book;
 use App\Form\BookType;
 use App\Repository\BookRepository;
 use App\Service\Slugify;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -88,6 +89,28 @@ class BookController extends AbstractController
         return $this->render('book/edit.html.twig', [
             'book' => $book,
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/fav", name="book_fav")
+     * @param Book $book
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function addToFav(Book $book, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($user->getFav()->contains($book)) {
+            $user->removeFav($book);
+        } else {
+            $user->addFav($book);
+        }
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->json([
+            'isInFav' => $user->isInFav($book)
         ]);
     }
 
