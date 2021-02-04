@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Share a book{% endblock %}
+
+{% block body %}
+    <h1>Share {{ book.title }}</h1>
+    <form action="{{ path('book_share', {'slug': book.slug}) }}" method="post">
+        <label for="email">Recipient's email :</label>
+        <input type="email" name="email" placeholder="recipient">
+        <button type="submit" class="btn btn-success">SEND</button>
+    </form>
+    <a href="{{ path('book_show', {'slug': book.slug}) }}">back to book</a>
+{% endblock %}

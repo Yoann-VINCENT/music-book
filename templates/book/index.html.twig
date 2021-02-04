@@ -19,6 +19,13 @@
                     <div class="page page-5"></div>
                 </div>
             </a>
+            {% if app.user %}
+                <div class="fav {{ app.user.isInFav(book) ? 'fas' : 'far' }}" data-text="{{path('book_fav', {'id': book.id})}}"></div>
+            {% endif %}
         {% endfor %}
     </main>
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('fav') }}
 {% endblock %}

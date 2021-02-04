@@ -5,11 +5,19 @@
     <a href="{{ path('app_home') }}"><h2 class="nav-title">Music Book</h2></a>
     <div class="flex-column">
         <p>
-            {% if app.user and app.user.pseudo %}
-            {{ app.user.pseudo }}
-            {% else %}
-                {{ app.user.email ?? 'Anonymous user' }}
-            {% endif %}
+            <a href="
+                {% if app.user %}
+                    {{ path('app_profile') }}
+                {% else %}
+                    #
+                {% endif %}"
+            >
+                {% if app.user and app.user.pseudo %}
+                    {{ app.user.pseudo }}'s profile
+                {% else %}
+                    {{ app.user.email ?? 'Anonymous user' }}
+                {% endif %}
+            </a>
         </p>
         {% if app.user %}
             <a href="{{ path('app_logout') }}"> Logout</a>
@@ -25,6 +33,7 @@
             {% if app.user %}
                 <a href="{{ path('book_new') }}"><h5 class="text-white h4">Create new</h5></a>
                 <a href="{{ path('app_logout') }}"><h5 class="text-white h4">Logout</h5></a>
+                <a href="{{ path('app_profile') }}"><h5 class="text-white h4">My profile</h5></a>
             {% else %}
                 <a href="{{ path('app_login') }}"><h5 class="text-white h4">Login</h5></a>
             {% endif %}

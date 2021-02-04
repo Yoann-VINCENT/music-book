@@ -15,7 +15,6 @@ Make your own music book app !
 3. In the newly created .env.local file, define the following variables:
     * `DATABASE_URL`
     * `MAILER_DSN`
-    * `MAILER_FROM_ADDRESS`
 4. Run `composer install`
 5. Run `php bin/console d:d:c` to create the database
 6. Run `php bin/console d:m:m` to make the migration

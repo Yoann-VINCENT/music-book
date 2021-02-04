@@ -21,6 +21,9 @@
     </div>
     <div class="d-flex flex-row justify-content-around mt-4">
         <a class="btn btn-info" href="{{ path('book_index') }}">Back to list</a>
+        {% if app.user %}
+            <a class="btn btn-dark" href="{{ path('book_share', {'slug': book.slug}) }}">Share !</a>
+        {% endif %}
         {% if book.author.email == app.user.email %}
             <a class="btn-lg btn-success" href="{{ path('page_new', {'slug': book.slug}) }}">Add page</a>
             <a class="btn btn-info" href="{{ path('book_edit', {'slug': book.slug}) }}">Edit</a>
