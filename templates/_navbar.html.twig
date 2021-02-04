@@ -2,7 +2,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <h2 class="nav-title">Music Book</h2>
+    <a href="{{ path('app_home') }}"><h2 class="nav-title">Music Book</h2></a>
     <div class="flex-column">
         <p>
             {% if app.user and app.user.pseudo %}
@@ -12,17 +12,22 @@
             {% endif %}
         </p>
         {% if app.user %}
-            <a href="{{ path('app_logout') }}"> Se déconnecter</a>
+            <a href="{{ path('app_logout') }}"> Logout</a>
         {% else %}
-            <a href="{{ path('app_login') }}"> Se connecter</a>
+            <a href="{{ path('app_login') }}"> Login</a>
         {% endif %}
     </div>
 </nav>
 <div class="pos-f-t">
     <div class="collapse" id="navbarToggleExternalContent">
         <div class="bg-dark p-4">
-            <h5 class="text-white h4">Collapsed content</h5>
-            <span class="text-muted">Toggleable via the navbar brand.</span>
+            <a href="{{ path('book_index') }}"><h5 class="text-white h4">All books</h5></a>
+            {% if app.user %}
+                <a href="{{ path('book_new') }}"><h5 class="text-white h4">Create new</h5></a>
+                <a href="{{ path('app_logout') }}"><h5 class="text-white h4">Logout</h5></a>
+            {% else %}
+                <a href="{{ path('app_login') }}"><h5 class="text-white h4">Login</h5></a>
+            {% endif %}
         </div>
     </div>
 </div>

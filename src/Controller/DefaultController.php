@@ -16,9 +16,9 @@ class DefaultController extends AbstractController
      */
     public function index(BookRepository $bookRepository): Response
     {
-        $books = $bookRepository->findAll();
+        $lastBook = $bookRepository->findBy(array(),array('id'=>'DESC'),1,0);
         return $this->render('default/index.html.twig', [
-            'books' => $books,
+            'lastBook' => $lastBook,
         ]);
     }
 }

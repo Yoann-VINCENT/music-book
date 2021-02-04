@@ -3,10 +3,19 @@
 {% block title %}Music Book{% endblock %}
 
 {% block body %}
-    <h1>Make your own music book !</h1>
+    <div class="d-flex flex-column justify-content-around align-items-center">
+        <h1>Make your own music book !</h1>
+        {% if app.user %}
+            <a class="btn btn-info mb-3" href="{{ path('book_new') }}">Begin now</a>
+            {% else %}
+            <a class="btn btn-info mb-3" href="{{ path('register') }}">Begin now</a>
+        {% endif %}
+        <div class="bookBackground w-100" style="background: url('{{ asset('build/bookBackground.jpg') }}') no-repeat center center fixed; background-size: cover"></div>
+        <h3>Last music book created :</h3>
+    </div>
     <main class="book-container">
-    {% for book in books %}
-        <h2>{{ book.title }}</h2>
+    {% for book in lastBook %}
+        <h2>{{ book.title }} <span class="book-author">by {{ book.author.pseudo }}</span></h2>
         <a class="book" href="{{ path('book_show', {'slug': book.slug}) }}">
             <div class="inner-book">
                 <div class="img" style="padding-top: calc(1.07 * 100%)">
