@@ -49,12 +49,12 @@ class User implements UserInterface
     /**
      * @ORM\ManyToMany(targetEntity=Book::class, inversedBy="fav_users")
      */
-    private $favs;
+    private $fav;
 
     public function __construct()
     {
         $this->books = new ArrayCollection();
-        $this->favs = new ArrayCollection();
+        $this->fav = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -187,13 +187,13 @@ class User implements UserInterface
      */
     public function getFav(): Collection
     {
-        return $this->favs;
+        return $this->fav;
     }
 
     public function addFav(Book $fav): self
     {
-        if (!$this->favs->contains($fav)) {
-            $this->favs[] = $fav;
+        if (!$this->fav->contains($fav)) {
+            $this->fav[] = $fav;
         }
 
         return $this;
@@ -201,7 +201,7 @@ class User implements UserInterface
 
     public function removeFav(Book $fav): self
     {
-        $this->favs->removeElement($fav);
+        $this->fav->removeElement($fav);
 
         return $this;
     }
@@ -212,7 +212,7 @@ class User implements UserInterface
      */
     public function isInFav(Book $book): bool
     {
-        if ($this->favs->contains($book)) {
+        if ($this->fav->contains($book)) {
             return true;
         } else {
             return false;
