@@ -1,0 +1,9 @@
+{% extends 'email/layout.html.twig' %}
+
+{% block title %}Book shared{% endblock %}
+
+{% block body %}
+    <h1>Hi ! {{ user.pseudo }} shared you a new book !</h1>
+    <p>It's {{ book.title }}, by {{ book.author.pseudo }} and you can find it <a href="http://127.0.0.1:8000/book/{{ book.slug }}">HERE</a></p>
+    <p>Enjoy ;-)</p>
+{% endblock %}

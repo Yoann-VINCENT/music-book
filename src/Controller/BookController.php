@@ -10,6 +10,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -70,6 +73,9 @@ class BookController extends AbstractController
 
     /**
      * @Route("/{slug}/edit", name="book_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Book $book
+     * @return Response
      */
     public function edit(Request $request, Book $book): Response
     {
@@ -89,6 +95,41 @@ class BookController extends AbstractController
         return $this->render('book/edit.html.twig', [
             'book' => $book,
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}/share", name="book_share", methods={"GET","POST"})
+     * @param Book $book
+     * @param MailerInterface $mailer
+     * @return Response
+     * @throws TransportExceptionInterface
+     */
+    public function share(Book $book, MailerInterface $mailer): Response
+    {
+        if (!$this->getUser()) {
+            throw new AccessDeniedException('You must be connected');
+        }
+
+        $user = $this->getUser();
+
+        if (!empty($_POST)) {
+            $email = (new Email())
+                ->from('contact@music-book.com')
+                ->to(trim($_POST['email']))
+                ->subject($user->getPseudo() . ' send you a new book !')
+                ->html($this->renderView('book/shareBookEmail.html.twig', [
+                    'book' => $book,
+                    'user' => $user,
+                    ]));
+            $mailer->send($email);
+            $this->addFlash('success', 'The link has been send');
+
+            return $this->redirectToRoute('book_index');
+        }
+
+        return $this->render('book/share.html.twig', [
+            'book' => $book,
         ]);
     }
 
@@ -116,6 +157,9 @@ class BookController extends AbstractController
 
     /**
      * @Route("/{id}", name="book_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Book $book
+     * @return Response
      */
     public function delete(Request $request, Book $book): Response
     {
