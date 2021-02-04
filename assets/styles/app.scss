@@ -1,5 +1,12 @@
 @import "~bootstrap/scss/bootstrap";
+@import "book";
+@import "breakpoint";
 
 body {
     background-color: lightgray;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
 }
