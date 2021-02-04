@@ -2,8 +2,15 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <h2>Music Book</h2>
-    <div>
+    <h2 class="nav-title">Music Book</h2>
+    <div class="flex-column">
+        <p>
+            {% if app.user and app.user.pseudo %}
+            {{ app.user.pseudo }}
+            {% else %}
+                {{ app.user.email ?? 'Anonymous user' }}
+            {% endif %}
+        </p>
         {% if app.user %}
             <a href="{{ path('app_logout') }}"> Se déconnecter</a>
         {% else %}
