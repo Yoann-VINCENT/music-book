@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/book")
@@ -40,7 +41,9 @@ class BookController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $slug = $slugify->generate($book->getTitle());
-            $book->setSlug($slug);
+            $book->setSlug($slug)
+                ->setCreatedAt(new \DateTime('now'))
+                ->setAuthor($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($book);
             $entityManager->flush();
@@ -69,6 +72,10 @@ class BookController extends AbstractController
      */
     public function edit(Request $request, Book $book): Response
     {
+        if (!($this->getUser() == $book->getAuthor())) {
+            throw new AccessDeniedException('Only the author can edit the book!');
+        }
+
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
@@ -89,6 +96,10 @@ class BookController extends AbstractController
      */
     public function delete(Request $request, Book $book): Response
     {
+        if (!($this->getUser() == $book->getAuthor())) {
+            throw new AccessDeniedException('Only the author can delete the book!');
+        }
+
         if ($this->isCsrfTokenValid('delete'.$book->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($book);

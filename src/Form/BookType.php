@@ -21,9 +21,6 @@ class BookType extends AbstractType
                 'allow_delete'  => true,
                 'download_uri' => true,
             ])
-            ->add('created_at')
-            ->add('slug')
-            ->add('author')
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'title',

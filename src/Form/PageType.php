@@ -33,8 +33,6 @@ class PageType extends AbstractType
                 'asset_helper' => true,
             ])
             ->add('lyrics')
-            ->add('page_number')
-            ->add('book', null, ['choice_label' => 'title'])
         ;
     }
 

@@ -8,7 +8,7 @@
         {% if app.user %}
             <a class="btn btn-info mb-3" href="{{ path('book_new') }}">Begin now</a>
             {% else %}
-            <a class="btn btn-info mb-3" href="{{ path('register') }}">Begin now</a>
+            <a class="btn btn-info mb-3" href="{{ path('app_register') }}">Begin now</a>
         {% endif %}
         <div class="bookBackground w-100" style="background: url('{{ asset('build/bookBackground.jpg') }}') no-repeat center center fixed; background-size: cover"></div>
         <h3>Last music book created :</h3>
